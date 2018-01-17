@@ -316,4 +316,16 @@ f.__next__() #文件末尾时引发StopIteration异常
 for line in open('HelloWorld.py'):
     print(line.upper(), end = '')
 
+#列表解析
+lines = [line.rstrip() for line in open('HelloWorld.py') if line[0] == 'p']
+#等价形式
+res = []
+for line in open('HelloWorld.py'):
+    if line[0] == 'p':
+        res.append(line.rstrip())
 
+[x + y for x in 'abc' for y in 'lmn']
+
+list(map(str.upper, open('HelloWorld.py')))
+'import sys\n' in open('HelloWorld.py')
+sorted()
