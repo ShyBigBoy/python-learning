@@ -1,0 +1,8 @@
+pip install -r requirements.txt
+
+#而文件requirement.txt里面内容的格式和pip freeze的格式完全一样。
+#因此我们可以将pip freeze的内容输出至requirements.txt。
+#其他机器可以根据导出的requirements.txt进行包安装。
+
+pip freeze | tee requirements.txt # 输出本地包环境至文件
+pip install -r requirements.txt   # 根据文件进行包安装

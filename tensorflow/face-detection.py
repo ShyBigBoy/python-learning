@@ -20,7 +20,7 @@ with tf.Graph().as_default():
         with sess.as_default():
             pnet, rnet, onet = detect_face.create_mtcnn(sess, None)
 
-image_path = '/home/cqh/faceData/multi_face/multi_face3.jpg'
+image_path = 'facedata/mmexport1515650182482.jpg'
 
 img = misc.imread(image_path)
 bounding_boxes, _ = detect_face.detect_face(img, minsize, pnet, rnet, onet, threshold, factor)
