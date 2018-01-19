@@ -3,7 +3,6 @@ import tensorflow as tf
 import detect_face
 import cv2
 import matplotlib.pyplot as plt
-import pylab
 %pylab inline
 
 minsize = 20 # minimum size of face
