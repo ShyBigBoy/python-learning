@@ -286,6 +286,7 @@ for i in range(len(L)): #修改list
 L1 = [1, 2, 3, 4]
 L2 = [5, 6, 7, 8]
 list(zip(L1, L2))
+list(map(str.upper, open('HelloWorld.py')))
 
 for (x, y) in zip(L1, L2): #并行迭代
     print(x, y, '--', x + y)
@@ -328,4 +329,131 @@ for line in open('HelloWorld.py'):
 
 list(map(str.upper, open('HelloWorld.py')))
 'import sys\n' in open('HelloWorld.py')
-sorted()
+sorted(open('HelloWorld.py'))
+list(zip(open('HelloWorld.py'), open('HelloWorld.py')))
+list(enumerate(open('HelloWorld.py')))
+list(filter(bool, open('HelloWorld.py')))
+import functools, operator
+functools.reduce(operator.add, open('HelloWorld.py'))
+
+sum([3, 2, 4, 1, 5, 0])
+any(['spam', '', 'ni'])
+all(['spam', '', 'ni'])
+max([3, 2, 4, 1, 5, 0])
+min([3, 2, 4, 1, 5, 0])
+
+#list tuple dict set
+tuple(open('HelloWorld.py'))
+'&&'.join(open('HelloWorld.py'))
+#>>>"import sys\n&&print(sys.platform)\n&&print(2 ** 10)\n"
+a, b, c = open('HelloWorld.py')
+a, *b = open('HelloWorld.py')
+set(open('HelloWorld.py'))
+{line for line in open('HelloWorld.py') if line[0] == 'p'} #set
+{ix: line for ix, line in enumerate(open('HelloWorld.py')) if line[0] == 'p'} #dict
+
+
+def f(a: int = 3, b = None, c = None, d = None) -> None:
+    """
+    A print func
+
+    a args
+
+    b args
+
+    c args
+
+    d args
+    """
+    print(a, b, c, d, sep = '&')
+
+f(1, 2, 3, 4)
+f(*[1, 2, 3, 4]) # *arg参数解包：自动解包为单个参数，接受可迭代对象
+f(*open('HelloWorld.py'))
+
+X = (1, 2)
+Y = (3, 4)
+list(zip(X, Y))
+A, B = zip(*zip(X, Y)) #unzip a zip
+
+#py3.0新的迭代对象
+#range不是自己的迭代器，支持在其结果上的多个iterator
+R = range(3) #return an iterator
+I1 = iter(R)
+I1.__next__()
+I2 = iter(R)
+I2.__next__()
+#map zip filter返回一个iterator，并且都是自己的iterator
+#在遍历一次后就用尽了
+M = map(abs, (-1, 0, 1))
+M.__next__()
+for x in M: print(x) #iterator为空，遍历一次后用尽了，需要重新赋值
+list(zip((1, 2, 3), (10, 20, 30)))
+list(filter(bool, ['spam', '', 'ni']))
+
+#字典iterator
+D = dict(a = 1, b = 2, c = 3)
+K = D.keys()
+I = iter(K)
+I.__next__()
+for k in D.keys(): print(k, end = ' ')
+for (k, v) in D.items(): print(k, v, end = ' ')
+I = iter(D)
+I.__next__()
+for key in D: print(key, end = ' ')
+for k in sorted(D): print(k, D[k], end = ' ')
+
+#文档字符串__doc__
+import sys
+print(sys.__doc__)
+import docstrings
+print(docstrings.__doc__)
+print(docstrings.f.__doc__)
+print(docstrings.Employee.__doc__)
+print(docstrings.Employee.f2.__doc__)
+
+#PyDoc
+#help() 交互模式下
+import sys
+help(sys.getrefcount)
+help(dict)
+import docstrings
+help(docstrings)
+help(docstrings.Employee)
+help(docstrings.Employee.f2)
+
+#HTML报表
+pydoc3 -b
+pydoc3 -w docstrings
+
+#函数
+#函数运行时会生成一个新的函数对象并将其赋值给这个函数名
+# 函数名变成了某一函数的引用
+#def是一个可执行的语句，可出现在语句出现的任意地方，甚至嵌套在其他语句中
+if True:
+    def func():
+        ...
+else:
+    def func():
+        ...
+
+othername = func
+othername()
+
+def func2(): ...
+func()
+#函数仅仅是对象，执行时记录在了内存中，除了调用外，
+# 函数允许任意属性附加到记录信息以供随后使用
+func.attr = 5 #attach attributes
+
+def intersect(seq1, seq2):
+    res = []
+    for x in seq1:
+        if x in seq2:
+            if not x in res:
+                res.append(x)
+    return res
+
+def intersect2(seq1, seq2):
+    return [x for x in seq1 if x in seq2]
+
