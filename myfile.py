@@ -457,3 +457,163 @@ def intersect(seq1, seq2):
 def intersect2(seq1, seq2):
     return [x for x in seq1 if x in seq2]
 
+#作用域
+def func():
+    x = 4
+    action = (lambda n: x ** n)
+    return action
+
+x = func()
+print(x(2))
+
+#nonlocal:允许对嵌套的函数作用域中的变量赋值
+def tester(start):
+    state = start
+    def nested(lable):
+        nonlocal state
+        print(lable, state)
+        state += 1
+    return nested #创建函数并返回以便之后使用
+
+F = tester(0)
+F('spam')
+F('ham')
+
+#避免可变参数的修改
+def changer(arg1, arg2: list):
+    arg2.append('s')
+    print(arg1, arg2)
+
+L = [1, 2]
+changer('hello', L)
+changer('hello', L[:]) #Pass a copy, 'L' doesn't change
+changer('hello', tuple(L))
+
+def changer2(a, b: list):
+    b = b[:]
+    b.append('s')
+    print(a, b)
+
+#任意参数
+#两种匹配扩展：* 和 **，让函数支持任意数目的参数
+def f(*args): print(args) #将所有位置相关参数收集到一个新元组中，并赋值给args
+f()
+f(1)
+f(1, 2, 3, 4)
+# **类似，只对关键字参数有效，将关键字参数传递给一个新字典
+def f(**args): print(args)
+f()
+f(a = 1, b = 2)
+
+def f(a, *pargs, **kargs): print(a, pargs, kargs)
+f(1, 2, 3, x = 1, y = 2) #1按照位置传递给a，2、3收集到pargs位置元组中，x、y放入kargs关键字字典中
+#1 (2, 3) {'x': 1, 'y': 2}
+
+def average(arg1: float, arg2: float, *args) -> float:
+    print(args)
+    sum = 0
+    if args.__len__():
+        for value in args:
+            sum += value
+    return (arg1 + arg2 + sum) / (2 + args.__len__())
+
+#解包参数
+def func(a, b, c, d): print(a, b, c, d)
+args = (1, 2)
+args += (3, 4)
+func(*args)
+
+args = {'a': 1, 'b': 2, 'c': 3}
+args['d'] = 4
+func(**args) #以键值对形式解包一个字典，使其成为独立的关键字参数
+func(*(1, 2), **{'d': 4, 'c': 5})
+func(1, *(2, 3), **{'d': 6})
+func(1, *(2,), c = 5, **{'d': 7})
+
+#应用函数通用性，varargs调用语法
+def tracer(func, *pargs, **kargs):
+    print('calling: ', func.__name__, '(', pargs, ',', kargs, ')')
+    return func(*pargs, **kargs)
+
+def func(a, b, c, d):
+    print('calling A')
+    return a + b + c +d
+
+print(tracer(func, 1, 2, c=3, d = 4))
+
+def echo(msg):
+    print(msg)
+schedule = [(echo, 'Spam!'), (echo, 'Ham!')] #把函数对象填入到数据结构
+for (func, arg) in schedule:
+    func(arg)
+
+#创建函数并返回以便之后使用
+def make(label):
+    def echo(msg):
+        print(label + ':' + msg)
+    return echo
+F = make('Spam')
+F('Ham!')
+F('Eggs!')
+
+#py3.0中函数注解
+def func(a: 'spam', b: (1, 10), c: float) -> int:
+    return a + b + c
+
+#匿名函数：lambda，主体是一个单个的表达式，而不是一个语句
+# 创建并返回一个函数，而不是将这个函数赋值给一个变量
+f = lambda x, y = 9, z: x + y + z
+f(2, 3, 4)
+
+def knights():
+    title = 'Sir'
+    action = lambda x: title + ' ' + x
+    return action
+act = knights()
+act('Robin')
+
+#callback回调
+import sys
+from tkinter import Button, mainloop
+x = Button(text = 'Press me', command = (lambda: sys.stdout.write('Spam\n')))
+x.pack()
+mainloop()
+
+class MyGui:
+    def makeWidgets(self):
+        Button(command = (lambda: self.onPress('spam')))
+    def onPress(self, msg):
+        sys.stdout.write('Spam\n')
+
+#跳转表 行为表
+L = [lambda x: x ** 2,
+     lambda x: x ** 3,
+     lambda x: x ** 4]
+for f in L:
+    print(f(2))
+print(L[0](3))
+
+key = 'got'
+{'already': (lambda: 2 + 2),
+ 'got': (lambda: 2 * 4),
+ 'one': (lambda: 2 ** 6)}[key]()
+
+ lower = (lambda x, y: x if x < y else y)
+ lower('bb', 'aa')
+
+ #在lambda函数中执行循环，能够嵌入map或列表解析表达式来实现
+ import sys
+ showall = lambda x: list(map(sys.stdout.write, x))
+ t = showall(['spam\n', 'toast\n', 'eggs\n'])
+
+ showall = lambda x: [sys.stdout.write(line) for line in x]
+ t = showall(('bright\n', 'side\n', 'of\n', 'life\n'))
+
+ #嵌套的lambda，最好避免使用嵌套的lambda
+action = (lambda x: (lambda y: x + y))
+act = action(99)
+act(3)
+
+((lambda x: (lambda y: x + y))(99))(4)
+
+#map
