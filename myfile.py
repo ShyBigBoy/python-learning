@@ -617,3 +617,43 @@ act(3)
 ((lambda x: (lambda y: x + y))(99))(4)
 
 #map
+counters = [1, 2, 3, 4]
+def inc(x): return x + 10
+list(map(inc, counters))
+#使用lambda改进为
+list(map((lambda x: x + 3), counters))
+
+#自己编写一个一般映射工具
+def mymap(func, seq) -> list:
+    res = []
+    for x in seq:
+        res.append(func(x))
+        return res
+
+list(map((lambda x, y: x ** y), [1, 2, 3], [2, 3, 4]))
+
+#函数式编程工具：filter和reduce
+list(filter((lambda x: x > 0), range(-5, 5)))
+from functools import reduce
+#reduce自身不是一个迭代器，它返回单个结果，这里是求和
+#每一步，reduce将当前的和 以及列表中下一个元素传递给lambda函数
+#默认，序列中第一个元素初始化了起始值
+reduce((lambda x, y: x + y), [1, 2, 3, 4])
+#result: 10
+
+#等效形式
+L = [1, 2, 3, 4]
+res = L[0]
+for x in L[1:]:
+    res = res + x
+
+def myreduce(function, sequence):
+    tally = sequence[0]
+    for next in sequence[1:]:
+        tally = function(tally, next)
+    return tally
+
+import operator, functools
+functools.reduce(operator.add, [2, 4, 6])
+
+
