@@ -656,4 +656,54 @@ def myreduce(function, sequence):
 import operator, functools
 functools.reduce(operator.add, [2, 4, 6])
 
+ord('a') #result: 97
+chr(97) #result: 'a'
 
+#迭代和解析
+res = list(map(ord, 'spam'))
+res = [ord(x) for x in 'spam']
+
+[x ** 2 for x in range(10)]
+list(map((lambda x: x ** 2), range(10)))
+
+[x for x in range(5) if x % 2 == 0]
+list(filter((lambda x: x % 2 == 0), range(5)))
+
+[x ** 2 for x in range(10) if x % 2 == 0]
+list(map((lambda x: x ** 2),
+         filter((lambda x: x % 2 == 0), range(10)) ))
+
+res = [x + y for x in [0, 1, 2] for y in [100, 200, 300]]
+#result: [100, 200, 300, 101, 201, 301, 102, 202, 302]
+
+[(x, y) for x in range(5) if x % 2 == 0 for y in range(5) if y % 2 == 1]
+
+M = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+N = [[2, 2, 2], [3, 3, 3], [4, 4, 4]]
+[row[1] for row in M]
+[M[i][i] for i in range(len(M))]
+[M[i][len(M) - 1 -i] for i in range(len(M))]
+
+#矩阵对元素的乘积
+[M[row][col] * N[row][col] for row in range(3) for col in range(3)]
+
+[[M[row][col] * N[row][col] for col in range(3)] for row in range(3)]
+#等效形式
+res = []
+for row in range(3):
+    tmp = []
+    for col in range(3):
+        tmp.append(M[row][col] * N[row][col])
+    res.append(tmp)
+#性能：列表解析 > map >for循环
+
+[line.rstrip() for line in open('HelloWorld.py')]
+list(map((lambda line: line.rstrip()), open('HelloWorld.py')))
+
+listoftuple = [('bob', 35, 'mgr'), ('mel', 40, 'dev')]
+[age for (name, age, job) in listoftuple]
+list(map((lambda row: row[1]), listoftuple))
+#map是一个迭代器，根据需求产生结果，可以节省内存
+#为了同样实现内存节省，列表解析必须编码为生成器表达式
+
+#重访迭代器：生成器
