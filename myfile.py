@@ -707,3 +707,56 @@ list(map((lambda row: row[1]), listoftuple))
 #为了同样实现内存节省，列表解析必须编码为生成器表达式
 
 #重访迭代器：生成器
+#按需生成结果，延迟结果创建，节省内存空间，允许计算时间分散到各个结果请求
+#生成器函数：yield,生成一个值后挂起保存状态（包含整个本地作用域），并向调用者返回一个值
+# 随后从挂起的地方恢复状态继续执行，随着时间生成值的一个序列
+def gensquares(N):
+    for i in range(N):
+        yield i ** 2
+
+for i in gensquares(5):
+    print(i, end = ':')
+
+list(gensquares(5))
+
+def gen():
+    for i in range(10):
+        x = yield i
+        print('result: ', x)
+G = gen()
+
+#生成器表达式：像一般的列表解析一样，但是使用圆括号而不是方括号
+#对于非常大的结果集合的运算来说是最优选择
+[x ** 2 for x in range(4)] #List comprehension:build a list
+(x ** 2 for x in range(4)) #Generator expression:make an iterable
+#在一个list调用中包含一个生成器表达式，使其一次生成所有结果，
+# 生成器自身括号就不是必须的
+list(x ** 2 for x in range(4))
+
+for num in (x ** 2 for x in range(4)):
+    print('{0}, {1}'.format(num, num / 2.0))
+
+sum(x ** 2 for x in range(4))
+sorted(x ** 2 for x in range(4))
+sorted((x ** 2 for x in range(4)), reverse = True) #这里还是需要额外括号
+import math
+list(map(math.sqrt, (x **2 for x in range(4)))) #需要额外括号
+
+#生成器函数 VS 生成器表达式
+G = (c * 4 for c in 'SPAM')
+list(G)
+#等价的生成器函数
+def timesfour(S: str):
+    for c in S:
+        yield c * 4
+
+G = timesfour('spam')
+list(G)
+
+#生成器是单迭代器对象，遍历一次后就用尽了
+G = (c * 4 for c in 'SPAM')
+#一个生成器的迭代器是生成器自身
+#I1 = iter(G) I1.__next__() 等价于 G.__next__()
+iter(G) is G #result: True
+
+#如果手动使用多个迭代器，将会指向相同的位置
